@@ -2,26 +2,19 @@
 
 namespace App\Controller;
 
+use App\Const\QRConst;
+use App\Const\StatusConst;
 use App\DTO\Image\ComposeRequest;
-use App\Service\ImageService;
+use App\Enum\Image\FormatEnum;
+use App\Enum\Image\ResponseEnum;
 use Endroid\QrCode\Builder\BuilderInterface;
-use Endroid\QrCodeBundle\Response\QrCodeResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
 class ImageController extends AbstractController
 {
-
-    public function __construct(
-        private readonly ParameterBagInterface $parameterBag,
-        private readonly BuilderInterface $builder,
-    )
-    {
-        // ...
-    }
-
 //    #[Route('/png-to-svg', name: 'app_png_to_svg')]
 //    public function pngToSvg(Request $request): Response
 //    {
@@ -70,11 +63,48 @@ class ImageController extends AbstractController
 //        ]);
 //        return new Response();
 //    }
-
+    /**
+     * Создать QR код.
+     * @param ComposeRequest $composeRequest Параметры запроса.
+     * @param BuilderInterface $builder Сборщик QR кода.
+     * @return JsonResponse|Response
+     */
     #[Route('/compose', name: '_image_compose', methods: ['POST'])]
-    public function compose(ComposeRequest $composeRequest): Response
+    public function compose(ComposeRequest $composeRequest, BuilderInterface $builder): JsonResponse|Response
     {
-        return new Response();
+        $qrFormatType = QRConst::DEFAULT_FORMAT_TYPE;
+
+        $qrResult = $builder->build(
+            data: $composeRequest->link ?? null,
+            size: $composeRequest->meta?->size ?? QRConst::SIZE,
+            margin: $composeRequest->meta?->margin ?? QRConst::MARGIN,
+        );
+
+        if ($composeRequest->format !== null && $composeRequest->format->type !== null) {
+            if (!$qrFormatType = FormatEnum::tryFrom( strtolower($composeRequest->format->type) )?->value) {
+                return $this->json([
+                    'message' => 'Invalid image format',
+                    'status' => StatusConst::ERROR,
+                ]);
+            }
+        }
+
+        if (!$composeRequest->store) {
+            if ($composeRequest->response === ResponseEnum::JSON->value) {
+                if ($qrFormatType === FormatEnum::PNG->value) {
+                    return $this->json([
+                        'resource' => base64_encode($qrResult->getString()),
+                        'status' => StatusConst::OK,
+                    ]);
+                }
+            }
+        }
+
+        return $this->json([
+            'message' => 'Invalid way',
+            'status' => StatusConst::ERROR,
+        ]);
+
 //        $QRCodeForm = $this->createForm(QRCodeType::class);
 //        $QRCodeForm->handleRequest($request);
 //
