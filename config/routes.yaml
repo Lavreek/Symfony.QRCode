@@ -1,5 +1,17 @@
+# Используйте команду для отображения путей в приложении Symfony.
+# bin/console debug:router
+
+# Используйте стандартные настройки маршрутизации.
+# controllers:
+#    resource: routing.controllers
+
+# Используйте в качестве примера для определения конечного маршрута.
+# qrcode:
+#     controller: App\Controller\ImageController::compose
+#     path: /service/qrcode/compose
+
+# Используйте для определения единого префикса для метода контроллеров.
 controllers:
-    resource:
-        path: ../src/Controller/
-        namespace: App\Controller
+    resource: '../src/Controller/'
     type: attribute
+    prefix: '/service/qrcode'
