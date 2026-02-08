@@ -7,17 +7,17 @@
         "php": ">=8.4",
         "ext-ctype": "*",
         "ext-iconv": "*",
-        "endroid/qr-code-bundle": "^6.1",
+        "endroid/qr-code-bundle": "6.1.0",
         "lavreek/request-receiver": "1.0.0",
-        "symfony/apache-pack": "*",
-        "symfony/console": "8.0.*",
-        "symfony/dotenv": "8.0.*",
-        "symfony/flex": "^2",
-        "symfony/framework-bundle": "8.0.*",
-        "symfony/http-foundation": "8.0.*",
-        "symfony/runtime": "8.0.*",
-        "symfony/twig-bundle": "8.0.*",
-        "symfony/yaml": "8.0.*"
+        "symfony/apache-pack": "v1.0.1",
+        "symfony/console": "v8.0.4",
+        "symfony/dotenv": "v8.0.0",
+        "symfony/flex": "v2.10.0",
+        "symfony/framework-bundle": "v8.0.5",
+        "symfony/http-foundation": "v8.0.5",
+        "symfony/runtime": "v8.0.1",
+        "symfony/twig-bundle": "v8.0.4",
+        "symfony/yaml": "v8.0.1"
     },
     "config": {
         "allow-plugins": {

@@ -8,6 +8,7 @@ use App\DTO\Image\ComposeRequest;
 use App\Enum\Image\FormatEnum;
 use App\Enum\Image\ResponseEnum;
 use Endroid\QrCode\Builder\BuilderInterface;
+use Endroid\QrCodeBundle\Response\QrCodeResponse;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
@@ -96,6 +97,10 @@ class ImageController extends AbstractController
                         'resource' => base64_encode($qrResult->getString()),
                         'status' => StatusConst::OK,
                     ]);
+                }
+            } elseif ($composeRequest->response === ResponseEnum::FILE->value) {
+                if ($qrFormatType === FormatEnum::PNG->value) {
+                    return new QrCodeResponse($qrResult);
                 }
             }
         }
